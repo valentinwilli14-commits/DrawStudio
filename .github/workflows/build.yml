@@ -29,6 +29,12 @@ jobs:
           npm pkg set main=main.js
           npm pkg set scripts.dist="electron-builder --win portable"
 
+      - name: Create icon folder
+        run: |
+          New-Item -ItemType Directory -Force -Path build
+          Copy-Item icon.ico build/icon.ico
+        shell: pwsh
+
       - name: Create Electron files
         shell: pwsh
         run: |
@@ -37,15 +43,22 @@ jobs:
           const path = require('path');
 
           const APP_ID = 'com.valentin.drawstudio';
-
           app.setAppUserModelId(APP_ID);
 
           app.whenReady().then(() => {
+            const iconPath = path.join(__dirname, 'build', 'icon.ico');
+
             const win = new BrowserWindow({
               width: 1400,
               height: 950,
               title: 'DrawStudio',
-              icon: path.join(__dirname, 'icon.ico')
+              icon: iconPath
+            });
+
+            win.setAppDetails({
+              appId: APP_ID,
+              appIconPath: iconPath,
+              appIconIndex: 0
             });
 
             win.loadFile(path.join(__dirname, 'DrawStudio.html'));
@@ -62,13 +75,14 @@ jobs:
             "files": [
               "main.js",
               "DrawStudio.html",
-              "icon.ico",
+              "build/icon.ico",
               "package.json",
               "node_modules/**/*"
             ],
             "win": {
               "target": ["portable"],
-              "icon": "icon.ico"
+              "icon": "build/icon.ico",
+              "signAndEditExecutable": true
             }
           }
           '@ | Set-Content electron-builder.json
