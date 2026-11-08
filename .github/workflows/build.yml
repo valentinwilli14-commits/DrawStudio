@@ -36,6 +36,10 @@ jobs:
           const { app, BrowserWindow } = require('electron');
           const path = require('path');
 
+          const APP_ID = 'com.valentin.drawstudio';
+
+          app.setAppUserModelId(APP_ID);
+
           app.whenReady().then(() => {
             const win = new BrowserWindow({
               width: 1400,
@@ -43,6 +47,7 @@ jobs:
               title: 'DrawStudio',
               icon: path.join(__dirname, 'icon.ico')
             });
+
             win.loadFile(path.join(__dirname, 'DrawStudio.html'));
           });
           '@ | Set-Content main.js
@@ -51,8 +56,16 @@ jobs:
           {
             "appId": "com.valentin.drawstudio",
             "productName": "DrawStudio",
-            "directories": { "output": "dist" },
-            "files": ["main.js", "DrawStudio.html", "icon.ico", "package.json", "node_modules/**/*"],
+            "directories": {
+              "output": "dist"
+            },
+            "files": [
+              "main.js",
+              "DrawStudio.html",
+              "icon.ico",
+              "package.json",
+              "node_modules/**/*"
+            ],
             "win": {
               "target": ["portable"],
               "icon": "icon.ico"
@@ -68,4 +81,3 @@ jobs:
         with:
           name: DrawStudio-Windows
           path: dist/*.exe
-
