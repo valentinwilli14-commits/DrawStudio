@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - 'DrawStudio.html'
+      - 'icon.ico'
       - '.github/workflows/build.yml'
 
 jobs:
@@ -39,7 +40,8 @@ jobs:
             const win = new BrowserWindow({
               width: 1400,
               height: 950,
-              title: 'DrawStudio'
+              title: 'DrawStudio',
+              icon: path.join(__dirname, 'icon.ico')
             });
             win.loadFile(path.join(__dirname, 'DrawStudio.html'));
           });
@@ -50,8 +52,11 @@ jobs:
             "appId": "com.valentin.drawstudio",
             "productName": "DrawStudio",
             "directories": { "output": "dist" },
-            "files": ["main.js", "DrawStudio.html", "package.json", "node_modules/**/*"],
-            "win": { "target": ["portable"] }
+            "files": ["main.js", "DrawStudio.html", "icon.ico", "package.json", "node_modules/**/*"],
+            "win": {
+              "target": ["portable"],
+              "icon": "icon.ico"
+            }
           }
           '@ | Set-Content electron-builder.json
 
@@ -63,3 +68,4 @@ jobs:
         with:
           name: DrawStudio-Windows
           path: dist/*.exe
+
